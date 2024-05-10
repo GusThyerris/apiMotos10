@@ -52,24 +52,66 @@ class MotoController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(moto $moto)
+    public function show(string $id)
     {
-        //
+        $moto = Moto::find($id);
+
+        if($retorno){
+            return 'Moto localizada.'.$moto.Response() -> json([],Response::HTTP_NO_CONTENT);
+        } else{
+            return 'oto não localizada.'.Response() -> json([],Response::HTTP_NO_CONTENT);
+        }
+
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, moto $moto)
+    public function update(Request $request, string $id)
     {
-        //
+        $dadosMotos = $request -> all();
+        $validarDados = Validator::make($dadosMotos, [
+            'marca' => 'required',
+            'modelo' => 'required',
+            'cor' => 'required',
+            'ano' => 'required',
+        ]);
+
+        if($validarDados -> fails()){
+            return 'Dados Invalidos.'.$validarDados -> error(true). 500;
+        }
+
+        // traz do Moto o id da tabela de motos
+        $moto = Moto::find($id);
+        $moto -> marca = $dadosMotos['marca']
+        $moto -> modelo = $dadosMotos['modelo']
+        $moto -> cor = $dadosMotos['cor']
+        $moto -> ano = $dadosMotos['ano']
+
+        $retorno = $moto -> save();
+
+        if($retorno){
+            return 'Dados atualizados com sucesso.'.Response() -> json([],Response::HTTP_NO_CONTENT);
+        } else{
+            return 'Dados não atualizados.'.Response() -> json([],Response::HTTP_NO_CONTENT);
+        }
+
+
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(moto $moto)
+    public function destroy(string $id)
     {
-        //
+        // pedindo pra encontrar o id e colocar em $dadosMotos
+        $dadosMotos = Moto::find($id);
+
+        // se ele existe, exclua ele
+        if($dadosMoto -> delete()){
+            return 'O veículo foi deletado com sucesso';
+        }
+
+        return 'O veículo não foi deletado.'. response() -> json([], Response::HTTP_NO_CONTENT);
     }
 }
