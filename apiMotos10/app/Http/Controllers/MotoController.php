@@ -54,7 +54,7 @@ class MotoController extends Controller
      */
     public function show(string $id)
     {
-        $moto = Moto::find($id);
+        $moto = moto::find($id);
 
         if($retorno){
             return 'Moto localizada.'.$moto.Response() -> json([],Response::HTTP_NO_CONTENT);
@@ -82,7 +82,7 @@ class MotoController extends Controller
         }
 
         // traz do Moto o id da tabela de motos
-        $moto = Moto::find($id);
+        $moto = moto::find($id);
         $moto -> marca = $dadosMotos['marca']
         $moto -> modelo = $dadosMotos['modelo']
         $moto -> cor = $dadosMotos['cor']
@@ -105,11 +105,11 @@ class MotoController extends Controller
     public function destroy(string $id)
     {
         // pedindo pra encontrar o id e colocar em $dadosMotos
-        $dadosMotos = Moto::find($id);
+        $dadosMotos = moto::find($id);
 
         // se ele existe, exclua ele
         if($dadosMoto -> delete()){
-            return 'O veículo foi deletado com sucesso';
+            return 'O veículo foi deletado com sucesso'.Response() -> json([],Response::HTTP_NO_CONTENT);
         }
 
         return 'O veículo não foi deletado.'. response() -> json([], Response::HTTP_NO_CONTENT);
